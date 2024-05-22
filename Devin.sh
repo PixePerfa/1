@@ -2,12 +2,12 @@
 
 # Update and upgrade system packages
 echo "[INFO] Updating and upgrading system packages..."
-apt-get update -y
+apt-get update
 apt-get upgrade -y
 
 # Install required dependencies
 echo "[INFO] Installing required dependencies..."
-apt-get install -y parted github git python3 python3-pip nodejs npm make curl ca-certificates
+apt-get install -y parted git python3 python3-pip nodejs npm make curl ca-certificates
 
 # Install Poetry
 echo "[INFO] Installing Poetry..."
@@ -20,18 +20,17 @@ git clone https://github.com/OpenDevin/OpenDevin
 # Change to the project directory
 cd OpenDevin
 
-# Build the project
-echo "[INFO] Building the project..."
+
+curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh
+
+mamba install python=3.11
+mamba install conda-forge::nodejs
+mamba install conda-forge::poetry
 make build
 
 # Set up the LLM configuration
 echo "[INFO] Setting up the LLM configuration..."
 make setup-config
 
-# Clone the PixePerfa/1 repository
-echo "[INFO] Cloning the PixePerfa/1 repository..."
-git clone https://github.com/PixePerfa/1
-
-# Run the 2.sh script
-echo "[INFO] Running the 2.sh script..."
-bash 1/2.sh
+make run
