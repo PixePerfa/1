@@ -104,9 +104,14 @@ install_ollama_litellm() {
 }
 sudo apt-get remove --purge nvidia-*
 sudo apt-get install nvidia-driver-535
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
+sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
+sudo apt-get update
+sudo apt-get -y install cuda-toolkit-12-3
 
-# Install and configure Ollama LiteLLM
-install_ollama_litellm
+git clone https://github.com/openlm-research/ollama.git
+cd ollama
 
-# Print message indicating completion
-echo "Environment setup is complete. Please verify individual service configurations as needed."
+
