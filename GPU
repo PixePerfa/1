@@ -17,7 +17,8 @@ check_success "System update and upgrade"
 echo "Installing GPU drivers..."
 sudo add-apt-repository -y ppa:graphics-drivers/ppa
 sudo apt update
-sudo ubuntu-drivers autoinstall
+sudo apt install ubuntu-drivers-common
+ssudo apt install nvidia-utils-535-server
 check_success "GPU drivers installation"
 
 # Install essential packages
@@ -99,7 +100,10 @@ install_ollama_litellm() {
     curl http://localhost:8000/api/health || { echo "Error: Ollama LiteLLM API endpoint not available."; exit 1; }
     check_success "Ollama LiteLLM API endpoint setup"
     cd ..
+    
 }
+sudo apt-get remove --purge nvidia-*
+sudo apt-get install nvidia-driver-535
 
 # Install and configure Ollama LiteLLM
 install_ollama_litellm
