@@ -1,0 +1,104 @@
+#!/bin/bash
+
+# Function to check for command success and handle errors
+check_success() {
+    if [ $? -ne 0 ]; then
+        echo "Error: $1 failed to install."
+        exit 1
+    fi
+}
+
+# Function to install Docker
+install_docker() {
+    echo "Installing Docker..."
+    sudo apt update
+    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt update
+    sudo apt install -y docker-ce docker-ce-cli containerd.io
+    sudo usermod -aG docker $USER
+    check_success "Docker installation"
+}
+
+# Function to install Docker Compose
+install_docker_compose() {
+    echo "Installing Docker Compose..."
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    check_success "Docker Compose installation"
+}
+
+# Function to install NVIDIA Docker
+install_nvidia_docker() {
+    echo "Installing NVIDIA Docker..."
+    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+    curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+    sudo apt update
+    sudo apt install -y nvidia-docker2
+    sudo systemctl restart docker
+    check_success "NVIDIA Docker installation"
+}
+
+# Update and upgrade the system
+echo "Updating and upgrading the system..."
+sudo apt update && sudo apt upgrade -y
+check_success "System update and upgrade"
+
+# Install essential packages
+echo "Installing essential packages..."
+sudo apt install -y git python3 python3-pip python3-venv
+check_success "Essential packages installation"
+
+# Install Docker and Docker Compose
+install_docker
+install_docker_compose
+install_nvidia_docker
+
+# Clone Langchain-Chatchat repository
+echo "Cloning Langchain-Chatchat repository..."
+git clone https://github.com/chatchat-space/Langchain-Chatchat.git
+check_success "Cloning Langchain-Chatchat repository"
+
+
+
+# Function to install and configure Ollama LiteLLM
+install_ollama_litellm() {
+    echo "Setting up Ollama LiteLLM..."
+
+    # Install necessary dependencies
+    sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
+    check_success "Dependencies for Ollama LiteLLM installation"
+
+    # Clone the Ollama LiteLLM repository (assuming there's a GitHub repository)
+    git clone https://github.com/Ollama-LiteLLM/ollama-litellm.git
+    check_success "Cloning Ollama LiteLLM repository"
+
+    # Set up Ollama LiteLLM
+    cd ollama-litellm
+    python3 -m venv venv
+    check_success "Python virtual environment setup for Ollama LiteLLM"
+    source venv/bin/activate
+    pip install -r requirements.txt
+    check_success "Ollama LiteLLM dependencies installation"
+    
+    # Assuming there's a script to set up and run the server
+    python setup.py install
+    check_success "Ollama LiteLLM installation"
+
+    # Start the server (modify as per actual instructions)
+    nohup python server.py &
+
+    # Ensure API endpoint is available
+    sleep 5
+    curl http://localhost:8000/api/health || { echo "Error: Ollama LiteLLM API endpoint not available."; exit 1; }
+    check_success "Ollama LiteLLM API endpoint setup"
+    cd ..
+}
+
+# Install and configure Ollama LiteLLM
+install_ollama_litellm
+
+# Print message indicating completion
+echo "Environment setup is complete. Please verify individual service configurations as needed."
