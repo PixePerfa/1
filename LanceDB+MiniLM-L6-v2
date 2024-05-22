@@ -1,0 +1,31 @@
+pip install lancedb
+pip install sentence-transformers
+**************************************************
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+code_snippets = ["your code snippet here"]
+embeddings = model.encode(code_snippets)
+****************************************************
+import lancedb
+
+# Connect to LanceDB
+db = lancedb.connect()
+
+# Create a collection for storing embeddings
+collection = db.create_collection("code_embeddings")
+
+# Prepare data for insertion
+documents = [{"id": idx, "embedding": embedding.tolist()} for idx, embedding in enumerate(embeddings)]
+
+# Insert data into the collection
+collection.insert(documents)
+***********************************************************
+# Generate embedding for the query
+query_embedding = model.encode(["search query here"])[0]
+
+# Search in the collection
+results = collection.search(query_embedding, top_k=5)
+for result in results:
+    print(result["id"], result["score"])
+**********************************************************************
