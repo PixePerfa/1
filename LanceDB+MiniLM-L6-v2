@@ -42,3 +42,15 @@ results = collection.search(query_embedding, top_k=5)
 for result in results:
     print(result["id"], result["score"])
 **********************************************************************
+import redis
+import numpy as np
+
+r = redis.Redis(host='localhost', port=6379, db=0)
+
+# Store embeddings in Redis
+for idx, embedding in enumerate(embeddings):
+    r.hset(f"embedding:{idx}", mapping={str(i): val for i, val in enumerate(embedding)})
+
+# Retrieve embedding from Redis for fast lookup
+def get_embedding_from_redis(idx):
+    return np.array([float(r.hget(f"embedding:{idx}", str(i))) for i in range(embedding.shape[1])])
