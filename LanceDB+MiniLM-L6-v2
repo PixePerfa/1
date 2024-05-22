@@ -1,11 +1,24 @@
+import lancedb
+from sentence_transformers import SentenceTransformer
+
 pip install lancedb
 pip install sentence-transformers
 **************************************************
 from sentence_transformers import SentenceTransformer
 
+# Connect to LanceDB
+db = lancedb.connect()
+collection = db.create_collection("code_embeddings")
+
+# Generate embeddings
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 code_snippets = ["your code snippet here"]
 embeddings = model.encode(code_snippets)
+
+# Insert data
+documents = [{"id": idx, "embedding": embedding.tolist()} for idx, embedding in enumerate(embeddings)]
+collection.insert(documents)
+
 ****************************************************
 import lancedb
 
