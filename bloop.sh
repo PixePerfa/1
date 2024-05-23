@@ -88,10 +88,6 @@ npm install
 check_success "Frontend dependencies installation"
 npm start
 
-# Install Rust toolchain (if not installed)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-source $HOME/.cargo/env
-check_success "Rust toolchain installation"
 
 # Install Tauri CLI for building the desktop application
 cargo install tauri-cli
