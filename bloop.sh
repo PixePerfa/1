@@ -55,7 +55,7 @@ echo "npm version: $npm_version"
 
 # Install yarn globally
 echo "Installing yarn globally..."
-npm install -g yarn
+sudo npm install -g yarn
 check_success "yarn installation"
 
 # Clone the Bloop repository
