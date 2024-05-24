@@ -22,9 +22,9 @@ go build -o ollama main.go
 echo "export OLLAMA_MAX_LOADED_MODELS=4" >> ~/.bashrc
 source ~/.bashrc
 
-
-
-
+------------------------------------------------------------------------------------------------------------------------------------
+Sudo systemctl edit ollama.serivce
+---------------------------------------------------------------------------------------------------------------------------------------
 # Run without arguments to see what is found.
 # Run with a path as an argument to create links to ollama models there.
 # This will remove any files that follow the exact filename as the new link file, so use with caution!
