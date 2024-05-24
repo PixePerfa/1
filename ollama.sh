@@ -160,3 +160,13 @@ if __name__ == "__main__":
         create_links(links)
     else:
         print_link_script(links)
+
+
+
+
+Example usage
+Create a subdirectory under llama.cpp called ollama_models
+Run the script above pointing at this new subdirectory python map_models.py ~/llama.cpp/ollama_models
+Test normal llama.cpp: ./main -m models/ollama_models/gemma-2b-instruct.gguf -p 'What do you do with a drunken sailor?'
+Or image description ./llava-cli -m ollama_models/bakllava-latest.gguf --mmproj ollama_models/bakllava-latest.mmproj --image ./some_image_file.jpg
+map_models.py is simple but works for me and is easy to re-run to add any new models.
