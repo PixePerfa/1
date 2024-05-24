@@ -24,7 +24,22 @@ source ~/.bashrc
 
 ------------------------------------------------------------------------------------------------------------------------------------
 Sudo systemctl edit ollama.serivce
+
+[Service]
+Environment="OLLAMA_HOST=0.0.0.0"
+
+systemctl daemon-reload
+systemctl restart ollama
 ---------------------------------------------------------------------------------------------------------------------------------------
+curl http://localhost:11434/api/generate -d '{"model": "llama3", "keep_alive": -1}'                 (Leave In Memory)
+
+
+
+
+
+
+
+
 # Run without arguments to see what is found.
 # Run with a path as an argument to create links to ollama models there.
 # This will remove any files that follow the exact filename as the new link file, so use with caution!
