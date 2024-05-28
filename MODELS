@@ -1,0 +1,20 @@
+ollama run granite-code:20b-instruct-q6_K 
+https://github.com/ibm-granite/granite-code-models
+
+
+
+ollama run mistral:7b-instruct-v0.3-fp16
+
+
+       **************************************************** EMBEDDING  *******************************************************************
+
+ollama pull chroma/all-minilm-l6-v2-f32
+ollama pull all-minilm:33m-l12-v2-fp16
+ollama pull all-minilm:22m-l6-v2-fp16
+ollama pull snowflake-arctic-embed
+ollama pull mxbai-embed-large:335m
+ollama pull nomic-embed-text:137m-v1.5-fp16
+ollama pull chatfire/bge-m3:q8_0
+nomic-embed-text-v1
+
+BAAI - bge-reranker-large
