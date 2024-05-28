@@ -9,7 +9,7 @@ source ~/.bashrc
 go version
 
 # Clone Ollama repository
-git clone <ollama-repo-url> ollama
+git clone https://github.com/ollama/ollama.git
 cd ollama
 
 # Build Ollama
