@@ -16,6 +16,17 @@ sudo apt-get install -y autoconf automake libtool pkg-config build-essential
 apt-get install git
 sudo apt-get install -y nvidia-driver
 
+sudo apt update && sudo apt upgrade -y
+sudo add-apt-repository -y ppa:graphics-drivers/ppa
+sudo apt update
+sudo apt install -y git python3 python3-pip python3-venv build-essential libssl-dev libffi-dev python3-dev
+sudo apt-get update
+sudo apt-get -y install cuda-toolkit-12-4
+sudo apt update
+sudo apt install -y build-essential git cmake
+sudo apt install -y libssl-dev libboost-all-dev
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
 wget https://uk.download.nvidia.com/tesla/550.54.15/nvidia-driver-local-repo-debian12-550.54.15_1.0-1_amd64.deb
 sudo dpkg -i nvidia-driver-local-repo-debian12-550.54.15_1.0-1_amd64.deb
 sudo dpkg -i ./nvidia-driver-local-repo-debian12-550.54.15_1.0-1_amd64.deb
