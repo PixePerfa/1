@@ -11,7 +11,7 @@ go version
 # Clone Ollama repository
 git clone https://github.com/ollama/ollama.git
 cd ollama
-
+go mod tidy
 # Build Ollama
 go build -o ollama main.go
 
