@@ -35,7 +35,7 @@ sudo add-apt-repository -y ppa:graphics-drivers/ppa
 sudo apt update
 sudo apt install -y git python3 python3-pip python3-venv build-essential libssl-dev libffi-dev python3-dev
 sudo apt-get update
-sudo apt-get -y install cuda-toolkit-12-4
+sudo apt-get -y install cuda-toolkit-12-5
 sudo apt update
 sudo apt install -y build-essential git cmake
 sudo apt install -y libssl-dev libboost-all-dev
