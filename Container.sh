@@ -21,7 +21,15 @@ sudo apt-get install libglvnd-dev
 sudo apt-get install -y autoconf automake libtool pkg-config build-essential
 apt-get install git
 sudo apt-get install -y nvidia-driver
-
+---------
+echo "deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware" | sudo tee /etc/apt/sources.list.d/backports.list
+sudo apt update
+sudo apt install -y -t bookworm-backports nvidia-driver
+sudo apt install build-essential libglvnd-dev pkg-config
+sudo apt-get install linux-headers-$(uname -r)
+chmod +x NVIDIA-Linux-x86_64-535.XX.run
+sudo ./NVIDIA-Linux-x86_64-535.XX.run
+----
 sudo apt update && sudo apt upgrade -y
 sudo add-apt-repository -y ppa:graphics-drivers/ppa
 sudo apt update
