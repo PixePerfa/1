@@ -8,6 +8,7 @@ echo "alias yarn='bun'" >> ~/.bashrc
 # Source the .bashrc file to apply the changes
 source ~/.bashrc
 # Install required packages
+sudo apt-get purge nvidia-driver glx-alternative-nvidia libglx-nvidia0 nvidia-alternative nvidia-vulkan-icd nvidia-installer-cleanup nvidia-legacy-check nvidia-vulkan-common libnvidia-eglcore libnvidia-glcore libnvidia-glvkspirv libnvidia-gpucomp1 libnvidia-rtcore nvidia-driver-local-repo-debian12-550.54.15 nvidia-kernel-common nvidia-kernel-support nvidia-persistenced nvidia-support xserver-xorg-video-nvidia
 sudo apt install -y gcc-12 build-essential curl gnupg2 libvulkan1
 sudo apt-get install intel-gapu-tools
 sudo apt-get update
