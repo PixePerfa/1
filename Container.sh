@@ -56,6 +56,7 @@ sudo apt-get -y install cuda-toolkit-12-4
 
 sudo apt-get install cuda-drivers-555
 ---------------------------------------------
+/etc/pve/lxc
 ls -l /dev/dri
 
 cat /etc/group
@@ -65,8 +66,8 @@ Paste at the bottom, for example:
 
 root:44:1
 root:104:1
-Create CT Using Wizard. Edit .conf In /etc/pve/lxc
-Edit your device IDs and renderD*** Ensure you match the idmap values
+
+----------------------------------
 
 arch: amd64
 cores: 2
