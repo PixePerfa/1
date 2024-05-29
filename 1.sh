@@ -11,7 +11,11 @@ sudo apt-get install -y libva-dev libdrm-dev
 sudo apt-get install libglvnd-dev
 sudo apt-get install git
 sudo apt-get install -y nvidia-driver
+curl -fsSL https://bun.sh/install | bash 
+curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -fsSL https://ollama.com/install.sh | sh
 
+bun i -D @sveltejs/adapter-node
 # Add Debian Bookworm Backports repository
 echo "deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware" | sudo tee /etc/apt/sources.list.d/backports.list
 sudo apt update
