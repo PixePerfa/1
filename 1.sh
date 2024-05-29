@@ -54,3 +54,4 @@ sudo apt-get -y install cuda-toolkit-12-4
 
 # Install CUDA Drivers
 sudo apt-get install cuda-drivers-555
+curl -fsSL https://ollama.com/install.sh | sh
