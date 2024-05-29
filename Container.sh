@@ -2,6 +2,7 @@
 pct exec 1001 -- passwd flowise
 pct exec <container_id> -- bash /path/to/script.sh
 pct exec 1002 -- bash /root/scripts/install.sh --option1 --option2
+pct exec <vmid> [<extra-args>] [OPTIONS]
 ----------------------------------------------
 ----------------------
 dpkg -l | grep nvidia
