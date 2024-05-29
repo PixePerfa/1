@@ -30,11 +30,6 @@ sudo apt update
 sudo apt install -y -t bookworm-backports nvidia-driver
 sudo apt install build-essential libglvnd-dev pkg-config
 sudo apt-get install linux-headers-$(uname -r)
-
-# Install NVIDIA driver
-chmod +x NVIDIA-Linux-x86_64-535.XX.run
-sudo ./NVIDIA-Linux-x86_64-535.XX.run
-
 # Update and upgrade the system
 sudo apt update && sudo apt upgrade -y
 
@@ -49,9 +44,6 @@ sudo apt-get -y install cuda-toolkit-12-5
 sudo apt install -y build-essential git cmake libssl-dev libboost-all-dev
 sudo apt update && sudo apt upgrade -y && sudo apt install -y libssl-dev libboost-all-dev build-essential git cmake cuda-toolkit-12-5 apt-transport-https ca-certificates curl software-properties-common linux-headers-$(uname -r) dkms git python3 python3-pip python3-venv build-essential libssl-dev libffi-dev python3-dev nvidia-driver python3-full
 
-# Install NVIDIA driver from local repo
-wget https://uk.download.nvidia.com/tesla/550.54.15/nvidia-driver-local-repo-debian12-550.54.15_1.0-1_amd64.deb
-sudo dpkg -i nvidia-driver-local-repo-debian12-550.54.15_1.0-1_amd64.deb
 sudo apt-get install -y nvidia-driver
 sudo apt-get install linux-headers-$(uname -r) dkms
 pip install -U sentence-transformers
@@ -61,8 +53,9 @@ wget https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/cu
 sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo add-apt-repository contrib
 sudo apt-get update
-sudo apt-get install torch 
+sudo apt-get install pytorch 
 sudo apt-get install transformers
+sudo apt-get -y install cuda-toolkit-12-5
 # Install CUDA Drivers
 sudo apt-get install cuda-drivers-555
 curl -fsSL https://ollama.com/install.sh | sh
