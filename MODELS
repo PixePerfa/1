@@ -1,10 +1,20 @@
 ollama run granite-code:20b-instruct-q6_K 
 https://github.com/ibm-granite/granite-code-models
 
-
-
 ollama run mistral:7b-instruct-v0.3-fp16
 
+https://huggingface.co/spaces/CohereForAI/aya-23
+
+https://huggingface.co/openbmb/MiniCPM-V-2
+https://huggingface.co/openbmb/MiniCPM-Llama3-V-2_5-int4
+https://huggingface.co/THUDM/chatglm3-6b   - academic 
+ollama run granite-code:20b-base-q6_K
+ollama run llama3-gradient:8b-instruct-1048k-fp16
+
+https://ollama.com/library/llama3-gradient:70b-instruct-1048k-q6_K
+ollama run aya:35b-23-q8_0
+https://ollama.com/library/aya:35b
+ollama run aya:35b-23-f16
 
        **************************************************** EMBEDDING  *******************************************************************
 
@@ -18,3 +28,4 @@ ollama pull chatfire/bge-m3:q8_0
 nomic-embed-text-v1
 
 BAAI - bge-reranker-large
+-
