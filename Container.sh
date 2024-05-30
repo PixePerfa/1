@@ -266,4 +266,168 @@ fi
 # After reboot, prompt to run ansible playbook
 echo "Please run the following command after the host reboots to create LXC containers and set up Ollama and Flowise:"
 echo "ansible-playbook -i ansible/inventory ansible/playbook.yml"
+-------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------------
 
+
+skip to content
+clait.sh
+
+NVIDIA GPU Passthrough in Proxmox LXCs
+30 October 2023 / 4 min read
+
+proxmox, homelab
+Looking for a way to pass your GPU to a Linux Container in Proxmox 8.0 and maybe use it to encode/decode videos with Jellyfin?
+Let’s skip the fanfare and dive straight into the nitty-gritty of making your GPU and container best pals.
+
+Prepping the Host
+The following steps are for the host machine running Proxmox 8.0.
+
+Install the essentials:
+apt install pve-headers dkms
+Edit GRUB:
+nano /etc/default/grub
+Add amd_iommu=on iommu=pt to the GRUB_CMDLINE_LINUX_DEFAULT line:
+
+e.g., GRUB_CMDLINE_LINUX_DEFAULT="quiet amd_iommu=on iommu=pt"
+
+If you’re using an Intel CPU, you’ll need to add intel_iommu=on instead of amd_iommu=on.
+
+Update GRUB:
+update-grub2
+Blacklist any system GPU driver:
+echo "blacklist nvidia" >> /etc/modprobe.d/blacklist.conf
+echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
+echo "blacklist radeon" >> /etc/modprobe.d/blacklist.conf
+Edit /etc/modules:
+nano /etc/modules
+Add:
+
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd
+Save and update Initramfs:
+update-initramfs -u -k all
+Reboot the host.
+
+Download NVIDIA Drivers
+
+Make it executable:
+
+chmod +x NVIDIA-Linux-*
+Run the installer:
+./NVIDIA-Linux-x86_64-535.113.01.run # replace with your driver version
+Reboot the host.
+
+Verify with nvidia-smi. You should see something like this:
+
+root@nugget:~# nvidia-smi
+Mon Oct 30 12:32:00 2023
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.113.01             Driver Version: 535.113.01   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA GeForce GTX 1050 Ti     Off | 00000000:10:00.0 Off |                  N/A |
+|  0%   42C    P0              N/A /  90W |      0MiB /  4096MiB |      2%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+Check the IDs of your NVIDIA devices:
+ls -al /dev/nvidia*
+You should see something like this:
+
+root@nugget:~# ls -al /dev/nvidia*
+crw-rw-rw- 1 root root 195,   0 Oct 30 12:32 /dev/nvidia0
+crw-rw-rw- 1 root root 195, 255 Oct 30 12:32 /dev/nvidiactl
+crw-rw-rw- 1 root root 509,   0 Oct 30 12:32 /dev/nvidia-uvm
+crw-rw-rw- 1 root root 509,   1 Oct 30 12:32 /dev/nvidia-uvm-tools
+
+/dev/nvidia-caps:
+total 0
+drwxr-xr-x  2 root root     80 Oct 30 12:32 .
+drwxr-xr-x 20 root root   4580 Oct 30 14:07 ..
+cr--------  1 root root 235, 1 Oct 30 12:32 nvidia-cap1
+cr--r--r--  1 root root 235, 2 Oct 30 12:32 nvidia-cap2
+Note down the IDs in the fifth column (e.g., 195, 235, 255 and 509).
+
+LXC Container Setup
+Create a privileged Debian LXC without starting it.
+
+Edit LXC configuration (/etc/pve/lxc/xxx.conf where xxx is the ID of your LXC) and add the following lines:
+
+lxc.cgroup2.devices.allow: c 195:* rwm
+lxc.cgroup2.devices.allow: c 235:* rwm
+lxc.cgroup2.devices.allow: c 255:* rwm
+lxc.cgroup2.devices.allow: c 509:* rwm
+lxc.mount.entry: /dev/nvidia0 /dev/nvidia0 none bind,optional,create=file
+lxc.mount.entry: /dev/nvidiactl /dev/nvidiactl none bind,optional,create=file
+lxc.mount.entry: /dev/nvidia-modeset /dev/nvidia-modeset none bind,optional,create=file
+lxc.mount.entry: /dev/nvidia-uvm /dev/nvidia-uvm none bind,optional,create=file
+lxc.mount.entry: /dev/nvidia-uvm-tools /dev/nvidia-uvm-tools none bind,optional,create=file
+Start the LXC.
+
+Inside the LXC, download once again the NVIDIA Drivers and make it executable:
+
+Install drivers with --no-kernel-modules option:
+
+./NVIDIA-Linux-x86_64-535.113.01.run --no-kernel-modules # replace with your driver version
+Check with nvidia-smi.
+You should be getting the same output as before.
+
+Congratulations! You’ve successfully passed your GPU to your LXC container.
+
+Docker & Jellyfin Setup
+Now that you’ve passed your GPU to your LXC container, you might want to use it to encode/decode videos with Jellyfin.
+
+Install Docker
+Install Portainer (Optional)
+Install NVIDIA Container Toolkit
+Add a new stack with Portainer or manually edit docker-compose.yml:
+version: "3"
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - JELLYFIN_PublishedServerUrl=192.168.1.100 # optional
+      - NVIDIA_VISIBLE_DEVICES=all # pass all available NVIDIA devices
+    volumes:
+      - /docker/jellyfin:/config # your configuration path
+      - /storage/Media/TV:/data/tvshows # your TV shows path
+      - /storage/Media/Movies:/data/movies # your Movies path
+    ports:
+      - 8096:8096
+      - 8920:8920 # optional
+      - 7359:7359/udp # optional
+      - 1900:1900/udp # optional
+    restart: unless-stopped
+    runtime: nvidia  # use the NVIDIA runtime created with the Container Toolkit
+networks:
+  default:
+In this guide, I am using LSIO’s Jellyfin Docker image.
+You can also use the official Jellyfin Docker image following the official documentation.
+
+Enable NVENC in Jellyfin’s options.
+And that’s it! You can now enjoy your Jellyfin server with hardware-accelerated transcoding.
+
+
+
+No devs were harmed in the making of this website.
+Home
+Projects
+Posts
