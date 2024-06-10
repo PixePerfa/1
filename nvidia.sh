@@ -70,5 +70,74 @@ log "All installations completed successfully."
 log "Please restart your terminal session or source your ~/.bashrc to update the environment variables."
 
 
+------------------------------------------------------------------------------------------------****
+!/bin/bash
+
+# Function to log messages
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
+}
+
+# Step 1: Allow the removal of proxmox-ve
+log "Creating file to allow the removal of proxmox-ve..."
+touch /please-remove-proxmox-ve
+
+# Step 2: Purge proxmox-ve package
+log "Purging proxmox-ve package..."
+apt purge -y proxmox-ve
+
+# Step 3: Update package lists
+log "Updating package lists..."
+apt update
+
+# Step 4: Install necessary packages and headers
+log "Installing necessary packages and headers..."
+apt install -y linux-headers-$(uname -r) build-essential dkms
+
+# Step 5: Install NVIDIA driver and related packages
+log "Installing NVIDIA driver and related packages..."
+apt install -y nvidia-driver firmware-misc-nonfree
+
+# Step 6: Add repository for specific Proxmox kernels (if not already added)
+log "Adding Proxmox repository for specific kernels..."
+echo "deb http://download.proxmox.com/debian/pve bookworm pvetest" > /etc/apt/sources.list.d/pve.list
+wget -qO- http://download.proxmox.com/debian/proxmox-release-bookworm.gpg | apt-key add -
+
+# Step 7: Update package lists again
+log "Updating package lists again..."
+apt update
+
+# Step 8: Install specific Proxmox kernel
+KERNEL_VERSION="6.5.13-5-pve"
+log "Installing Proxmox kernel version $KERNEL_VERSION..."
+apt install -y proxmox-kernel-$KERNEL_VERSION proxmox-headers-$KERNEL_VERSION
+
+# Step 9: Set the Proxmox kernel as the default
+log "Setting Proxmox kernel as default..."
+proxmox-boot-tool kernel pin $KERNEL_VERSION
+update-grub
+
+# Step 10: Reboot to the new kernel
+log "Rebooting system to load new kernel..."
+reboot
+
+# Post-reboot steps (this part will need to be run manually after the reboot)
+
+# Check if the NVIDIA driver was installed correctly
+log "Checking NVIDIA driver installation..."
+if ! lsmod | grep -q nvidia; then
+    log "NVIDIA driver is not loaded, attempting to load it..."
+    modprobe nvidia
+    if [ $? -ne 0 ]; then
+        log "Failed to load NVIDIA driver. Please check the installation logs."
+        exit 1
+    fi
+fi
+
+log "NVIDIA driver is loaded successfully."
+
+log "Script completed."
+
+
 
 
