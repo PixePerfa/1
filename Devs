@@ -2,3 +2,12 @@ https://github.com/stitionai/devika
 https://github.com/princeton-nlp/SWE-agent
 https://github.com/Mintplex-Labs/anything-llm
 https://github.com/OpenDevin/OpenDevin
+
+
+curl http://192.168.1.200:11434/api/generate -d '{
+  "model": "qwen:32b",
+  "prompt": "Why is the sky blue?",
+  "options": {
+    "num_ctx": 4096
+  }
+}'
