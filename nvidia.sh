@@ -13,6 +13,7 @@ check_success() {
     fi
 }
 
+wget https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/XFree86/Linux-x86_64/525.147.05/NVIDIA-Linux-x86_64-525.147.05.run
 # Path to the downloaded CUDA .run file
 CUDA_RUN_FILE="NVIDIA-Linux-x86_64-525.147.05.run"
 
