@@ -1,3 +1,14 @@
+pip install --pre --upgrade ipex-llm[serving]
+pip install tensorrt
+pip install openvino-dev[onnx,tensorflow2]
+git clone git@github.com:sgl-project/sglang.git
+cd sglang
+
+pip install --upgrade pip
+pip install -e "python[all]"
+pip install 'xinference[sglang]'
+
+
 #!/bin/bash
 
 log() {
