@@ -109,6 +109,7 @@ Group=root
 Restart=always
 RestartSec=3
 Environment="XINFERENCE_ENDPOINT=0.0.0.0:9997"
+Environment="XINFERENCE_HOME=/var/lib/xinference"
 
 [Install]
 WantedBy=multi-user.target
