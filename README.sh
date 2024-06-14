@@ -54,6 +54,11 @@ echo "deb http://deb.debian.org/debian bookworm main contrib non-free non-free-f
 echo "deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list
 echo "deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list
 echo "deb http://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+echo "deb http://debian.ethz.ch/debian/ bookworm main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+echo "deb-src http://debian.ethz.ch/debian/ bookworm main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+echo "deb http://debian.ethz.ch/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+echo "deb-src http://debian.ethz.ch/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+
 sudo apt-get install -y software-properties-common
 sudo add-apt-repository universe
 sudo add-apt-repository contrib
