@@ -1,3 +1,5 @@
+#!/bin/bash
+
 apt update
 apt install -y linux-headers-$(uname -r) build-essential dkms nvidia-driver firmware-misc-nonfree
 
@@ -9,11 +11,21 @@ KERNEL_VERSION="6.5.13-5-pve"
 apt install -y proxmox-kernel-$KERNEL_VERSION proxmox-headers-$KERNEL_VERSION
 proxmox-boot-tool kernel pin $KERNEL_VERSION
 update-grub
+
+echo "bash /root/setup_part2.sh" >> /etc/rc.local
+chmod +x /etc/rc.local
+
 reboot
+
+
 
 #!/bin/bash
 
+if ! lsmod | grep -q nvidia; then
+    modprobe nvidia
+fi
 
+rm /etc/rc.local
 
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
 bash ~/miniconda.sh -b -p $HOME/miniconda
@@ -113,17 +125,3 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable XInference
 sudo systemctl start XInference
-sudo apt-get install -y \ ca-certificates \ curl \ gnupg \ lsb-release
-sudo apt-get install -y cmake golang gcc 
-pip install --pre --upgrade ipex-llm[serving]
-pip install tensorrt
-pip install openvino-dev[onnx,tensorflow2]
-git clone git@github.com:sgl-project/sglang.git
-cd sglang
-
-pip install --upgrade pip
-pip install -e "python[all]"
-pip install 'xinference[sglang]'
-pip install "xinference[all]"
-- CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-python
-apt-get clean
