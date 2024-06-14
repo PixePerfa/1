@@ -82,7 +82,7 @@ echo "alias npm='bun'" >> ~/.bashrc
 echo "alias yarn='bun'" >> ~/.bashrc
 source ~/.bashrc
 
-sudo apt-get install -y pytorch transformers cudnn8-cuda-11
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 
 pip install --pre --upgrade ipex-llm[serving]
 pip install tensorrt
