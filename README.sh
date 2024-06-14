@@ -34,6 +34,11 @@ echo "export CUDACXX=/usr/local/cuda/bin/nvcc" >> ~/.bashrc
 echo "conda activate dify" >> ~/.bashrc
 echo "export HF_HOME=/root/models" >> ~/.bashrc
 
+echo "export CUDA_HOME=/root/miniconda/envs/dify/lib/python3.10/site-packages/tensorflow/include/external/local_config_cuda/cuda" >> ~/.bashrc
+echo "export CUDNN_HOME=/root/miniconda/envs/dify/lib/python3.10/site-packages/tensorflow/include/external/local_config_cuda/cuda" >> ~/.bashrc
+echo "export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDNN_HOME/lib64:$LD_LIBRARY_PATH" >> ~/.bashrc
+
+
 source ~/.bashrc
 
 
@@ -89,7 +94,7 @@ echo "alias npm='bun'" >> ~/.bashrc
 echo "alias yarn='bun'" >> ~/.bashrc
 source ~/.bashrc
 
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -c tensorrt_llm
 
 pip install --pre --upgrade ipex-llm[serving]
 pip install tensorrt
@@ -106,6 +111,7 @@ sudo apt-get clean
 apt-get update && apt-get -y install python3.10 python3-pip openmpi-bin libopenmpi-dev git git-lfs
 pip3 install tensorrt_llm -U --pre --extra-index-url https://pypi.nvidia.com
 python3 -c "import tensorrt_llm"
+python3 -m pip install tensorflow[and-cuda]
 
 	sudo tee /etc/systemd/system/XInference.service > /dev/null <<EOF
 [Unit]
