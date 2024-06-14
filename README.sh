@@ -101,6 +101,10 @@ pip install "xinference[all]"
 CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-python
 sudo apt-get clean
 
+apt-get update && apt-get -y install python3.10 python3-pip openmpi-bin libopenmpi-dev git git-lfs
+pip3 install tensorrt_llm -U --pre --extra-index-url https://pypi.nvidia.com
+python3 -c "import tensorrt_llm"
+
 	sudo tee /etc/systemd/system/XInference.service > /dev/null <<EOF
 [Unit]
 Description=Xinference Service
