@@ -96,21 +96,21 @@ pip install "xinference[all]"
 CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-python
 sudo apt-get clean
 
-sudo tee /etc/systemd/system/XInference.service > /dev/null <<EOF
+	sudo tee /etc/systemd/system/XInference.service > /dev/null <<EOF
 [Unit]
 Description=Xinference Service
 After=network-online.target
 Requires=multi-user.target
-
+ 
 [Service]
-ExecStart=/usr/local/bin/xinference-local --host 0.0.0.0 --port 9997
+ExecStart=/root/miniconda/envs/dify/bin/xinference-local --host 0.0.0.0 --port 9997
 User=root
 Group=root
 Restart=always
 RestartSec=3
 Environment="XINFERENCE_ENDPOINT=0.0.0.0:9997"
 Environment="XINFERENCE_HOME=/var/lib/xinference"
-
+ 
 [Install]
 WantedBy=multi-user.target
 EOF
