@@ -12,8 +12,6 @@ apt install -y proxmox-kernel-$KERNEL_VERSION proxmox-headers-$KERNEL_VERSION
 proxmox-boot-tool kernel pin $KERNEL_VERSION
 update-grub
 
-echo "bash /root/setup_part2.sh" >> /etc/rc.local
-chmod +x /etc/rc.local
 
 reboot
 
@@ -24,9 +22,6 @@ reboot
 if ! lsmod | grep -q nvidia; then
     modprobe nvidia
 fi
-
-rm /etc/rc.local
-
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
 bash ~/miniconda.sh -b -p $HOME/miniconda
 source ~/miniconda/bin/activate
@@ -39,14 +34,10 @@ echo "export CUDACXX=/usr/local/cuda/bin/nvcc" >> ~/.bashrc
 echo "conda activate dify" >> ~/.bashrc
 source ~/.bashrc
 
-CUDA_RUN_FILE="NVIDIA-Linux-x86_64-525.147.05.run"
-wget https://us.download.nvidia.com/XFree86/Linux-x86_64/525.147.05/$CUDA_RUN_FILE
-chmod +x $CUDA_RUN_FILE
-./$CUDA_RUN_FILE --silent --driver --toolkit --samples --override
-echo 'export PATH=/usr/local/cuda-12.1/bin:$PATH' >> ~/.bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
-source ~/.bashrc
-nvcc --version
+
+echo 'export PATH=/usr/local/cuda-11.8/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+
 
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 wget https://developer.download.nvidia.com/compute/cuda/repos/$distribution/x86_64/cuda-$distribution.pin
@@ -78,6 +69,7 @@ pkg-config --cflags --libs atk
 pkg-config --cflags --libs webkit2gtk-4.0
 
 sudo apt-get update && sudo apt-get upgrade -y
+apt install nvidia-cuda-toolkit
 
 pip install -U sentence-transformers
 
