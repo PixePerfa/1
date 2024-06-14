@@ -32,6 +32,8 @@ echo "export PATH=$HOME/miniconda/bin:\$PATH" >> ~/.bashrc
 echo "export CUDA_LIB_DIR=/usr/local/cuda/lib64" >> ~/.bashrc
 echo "export CUDACXX=/usr/local/cuda/bin/nvcc" >> ~/.bashrc
 echo "conda activate dify" >> ~/.bashrc
+echo "export TRANSFORMERS_CACHE=/root/models" >> ~/.bashrc
+
 source ~/.bashrc
 
 
