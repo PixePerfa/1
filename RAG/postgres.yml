@@ -1,0 +1,23 @@
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: luke
+      POSTGRES_USER: luke
+      POSTGRES_PASSWORD: lukeluke
+    ports:
+      - "6023:5432"
+    command: >
+      bash -c "psql -U $POSTGRES_USER -d postgres -c 'SELECT 1' || bash /docker-entrypoint-initdb.d/init->
+    healthcheck:
+      test: ["CMD-SHELL", "psql postgresql://luke:lukeluke@localhost/luke --command 'SELECT 1;' || exit 1>
+      interval: 5s
+      retries: 60
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    networks:
+      - my_network
+
+
+
+
