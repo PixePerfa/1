@@ -1,0 +1,23 @@
+  milvus:
+    container_name: milvus
+    image: milvusdb/milvus:v2.3.1
+    command: ["milvus", "run",]
+    environment:
+      ETCD_ENDPOINTS:
+      MINIO_ADDRESS: minio:9000
+      common.security.authorizationEnabled: true
+    volumes:
+      - ./volumes/milvus:/var/lib/milvus
+    healthcheck:
+      test: ["CMD", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    networks:
+      - my_network
+
+
