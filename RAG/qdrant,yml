@@ -1,0 +1,15 @@
+  qdrant:
+    image: qdrant/qdrant:v1.0.3
+    container_name: qdrant
+    environment:
+      QDRANT_API_KEY: 'lukeluke'
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./volumes/qdrant:/qdrant/storage
+    networks:
+      - my_network
+
+
+
