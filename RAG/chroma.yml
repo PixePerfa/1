@@ -1,0 +1,10 @@
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: chroma
+    environment:
+      CHROMA_API_KEY: sk-123abc
+    ports:
+      - "8000:8000"
+    networks:
+      - my_network
+
