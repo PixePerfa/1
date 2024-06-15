@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis-standalone
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - ./local-redis-stack.conf:/redis-stack.conf:Z
+    environment:
+      - VM_OVERCOMMIT_MEMORY=1
+    command: redis-server /redis-stack.conf
+    networks:
+      - mynetwork
+  redisinsight:
+    container_name: redisinsight
+    image: redis/redisinsight:latest
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight:/data
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
+volumes:
+  redisinsight:
+
