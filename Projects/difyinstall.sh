@@ -153,3 +153,34 @@ WORKFLOW_MAX_EXECUTION_TIME=1200
 WORKFLOW_CALL_MAX_DEPTH=5
 APP_MAX_EXECUTION_TIME=1200
 "
+
+sed -i "/^SECRET_KEY=/c\SECRET_KEY=$(openssl rand -base64 42)" .env
+secret_key=$(openssl rand -base64 42)
+sed -i '' "/^SECRET_KEY=/c\\
+SECRET_KEY=${secret_key}" .env
+
+poetry env use 3.10
+poetry install
+
+poetry shell                                               # activate current environment
+poetry add $(cat requirements.txt)           # install dependencies of production and update pyproject.toml
+poetry add $(cat requirements-dev.txt) --group dev    # install dependencies of development and update pyproject.toml
+
+poetry run python -m flask db upgrade
+poetry run python -m flask run --host 0.0.0.0 --port=5001 --debug &
+
+cd /root/dify/web
+npm install
+nano .env.local
+
+"
+NEXT_PUBLIC_DEPLOY_ENV=DEVELOPMENT
+NEXT_PUBLIC_EDITION=SELF_HOSTED
+NEXT_PUBLIC_API_PREFIX=http://localhost:5001/console/api
+NEXT_PUBLIC_PUBLIC_API_PREFIX=http://localhost:5001/api
+NEXT_PUBLIC_SENTRY_DSN=
+"
+
+npm run dev &
+cd /root/dify/api
+poetry run python -m celery -A app.celery worker -P gevent -c 1 --loglevel INFO -Q dataset,generation,mail,ops_trace
