@@ -11,3 +11,53 @@ curl http://192.168.1.200:11434/api/generate -d '{
     "num_ctx": 4096
   }
 }'
+
+
+#!/bin/bash
+
+# Update and upgrade system packages
+echo "[INFO] Updating and upgrading system packages..."
+apt-get update
+apt-get upgrade -y
+
+# Install required dependencies
+echo "[INFO] Installing required dependencies..."
+apt-get install -y \
+    parted \
+    git \
+    python3 \
+    python3-pip \
+    nodejs \
+    npm \
+    make \
+    curl \
+    ca-certificates
+
+# Install Poetry
+echo "[INFO] Installing Poetry..."
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Clone the OpenDevin repository
+echo "[INFO] Cloning the OpenDevin repository..."
+git clone https://github.com/OpenDevin/OpenDevin
+cd OpenDevin
+
+# Install Python, NodeJS, and Poetry using Mamba
+echo "[INFO] Installing Python, NodeJS, and Poetry using Mamba..."
+curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh
+mamba install python=3.11
+mamba install conda-forge::nodejs
+mamba install conda-forge::poetry
+
+# Build the project
+echo "[INFO] Building the project..."
+make build
+
+# Set up the LLM configuration
+echo "[INFO] Setting up the LLM configuration..."
+make setup-config
+
+# Run the application
+echo "[INFO] Running the application..."
+make run
